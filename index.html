@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -8,20 +6,381 @@
   <meta name="google-signin-client_id" content="476999617163-6krmqmgm0u7igb4c35tickqtkqf33pcn.apps.googleusercontent.com">
   <title>PT2.5 GOOGLE SING IN</title>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --nit: #120d2b;
+      --nit-2: #1d1544;
+      --violeta: #7b5cff;
+      --corall: #ff5e8a;
+      --menta: #3ee6c1;
+      --or: #ffd166;
+      --text: #f4f1ff;
+      --text-suau: #b9b2dd;
+      --display: "Bricolage Grotesque", "Trebuchet MS", sans-serif;
+      --cos: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: var(--cos);
+      color: var(--text);
+      background: var(--nit);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ---------- Fons: aurora + quadrícula + estrelles ---------- */
+    .fons { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+
+    .aurora {
+      position: absolute;
+      width: 60vmax; height: 60vmax;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: .55;
+      animation: deriva 22s ease-in-out infinite alternate;
+    }
+    .aurora.a { background: var(--violeta); top: -20vmax; left: -15vmax; }
+    .aurora.b { background: var(--corall); bottom: -25vmax; right: -15vmax; animation-duration: 28s; animation-delay: -6s; }
+    .aurora.c { background: var(--menta); width: 36vmax; height: 36vmax; top: 30%; left: 55%; opacity: .28; animation-duration: 34s; }
+
+    @keyframes deriva {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(8vmax, 6vmax) scale(1.18); }
+    }
+
+    .quadricula {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
+      -webkit-mask-image: radial-gradient(ellipse at center, #000 20%, transparent 72%);
+    }
+
+    .estrelles { position: absolute; inset: 0; }
+    .estrelles i {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      background: #fff;
+      opacity: .7;
+      animation: titila 4s ease-in-out infinite;
+    }
+    @keyframes titila { 50% { opacity: .05; transform: scale(.4); } }
+
+    /* ---------- Escena i targeta hologràfica ---------- */
+    .escena { perspective: 1100px; width: min(440px, 100%); }
+
+    .targeta {
+      --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+      position: relative;
+      padding: 44px 36px 36px;
+      border-radius: 32px;
+      text-align: center;
+      background:
+        linear-gradient(160deg, rgba(255,255,255,.14), rgba(255,255,255,.04) 45%, rgba(255,255,255,.1));
+      border: 1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(22px) saturate(1.4);
+      -webkit-backdrop-filter: blur(22px) saturate(1.4);
+      box-shadow:
+        0 40px 80px -20px rgba(0,0,0,.6),
+        0 0 0 1px rgba(123,92,255,.25),
+        inset 0 1px 0 rgba(255,255,255,.35);
+      transform: rotateX(var(--rx)) rotateY(var(--ry));
+      transform-style: preserve-3d;
+      transition: transform .25s ease-out;
+      overflow: hidden;
+      animation: entra 1s cubic-bezier(.2,.9,.25,1.1) both;
+    }
+
+    @keyframes entra {
+      from { opacity: 0; transform: translateY(40px) rotateX(18deg) scale(.94); }
+    }
+
+    /* reflex hologràfic que segueix el ratolí */
+    .targeta::before {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,.35), transparent 38%),
+        conic-gradient(from 210deg at var(--mx) var(--my),
+          rgba(255,94,138,.28), rgba(255,209,102,.25), rgba(62,230,193,.28),
+          rgba(123,92,255,.3), rgba(255,94,138,.28));
+      mix-blend-mode: soft-light;
+      opacity: .9;
+      pointer-events: none;
+    }
+
+    /* cantell amb degradat animat */
+    .targeta::after {
+      content: "";
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      padding: 2px;
+      background: conic-gradient(from var(--angle, 0deg), var(--corall), var(--or), var(--menta), var(--violeta), var(--corall));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .75;
+      pointer-events: none;
+      animation: gira 7s linear infinite;
+    }
+    @property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+    @keyframes gira { to { --angle: 360deg; } }
+
+    .targeta > * { position: relative; z-index: 1; }
+
+    /* ---------- Segell orbital ---------- */
+    .segell {
+      width: 112px; height: 112px;
+      margin: 0 auto 26px;
+      position: relative;
+      display: grid; place-items: center;
+      transform: translateZ(50px);
+    }
+    .segell .anell {
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,.35);
+      animation: orbita 18s linear infinite;
+    }
+    .segell .anell.dos {
+      inset: 12px;
+      border: 2px solid transparent;
+      border-top-color: var(--menta);
+      border-right-color: var(--corall);
+      animation-duration: 6s;
+      animation-direction: reverse;
+    }
+    .segell .anell.dos::after {
+      content: ""; position: absolute; top: -6px; left: 50%;
+      width: 10px; height: 10px; margin-left: -5px;
+      border-radius: 50%; background: var(--or);
+      box-shadow: 0 0 14px 3px var(--or);
+    }
+    @keyframes orbita { to { transform: rotate(360deg); } }
+
+    .segell .nucli {
+      width: 58px; height: 58px;
+      border-radius: 18px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--violeta), var(--corall));
+      box-shadow: 0 10px 30px rgba(123,92,255,.6), inset 0 1px 0 rgba(255,255,255,.5);
+      transform: rotate(-8deg);
+      animation: flota 4s ease-in-out infinite;
+    }
+    @keyframes flota { 50% { transform: rotate(6deg) translateY(-6px); } }
+    .segell svg { width: 30px; height: 30px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .avatar {
+      display: none;
+      width: 84px; height: 84px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--menta);
+      box-shadow: 0 0 0 6px rgba(62,230,193,.2), 0 10px 30px rgba(0,0,0,.4);
+    }
+
+    /* ---------- Tipografia ---------- */
+    h1 {
+      font-family: var(--display);
+      font-weight: 800;
+      font-size: clamp(1.7rem, 6vw, 2.25rem);
+      line-height: 1.08;
+      letter-spacing: -.02em;
+      background: linear-gradient(100deg, #fff 10%, var(--or) 40%, var(--corall) 65%, #fff 95%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: brillantor 6s ease-in-out infinite;
+      transform: translateZ(30px);
+    }
+    @keyframes brillantor { 50% { background-position: 100% 0; } }
+
+    .subtitol {
+      margin-top: 12px;
+      color: var(--text-suau);
+      font-size: .98rem;
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-family: var(--display);
+      font-weight: 500;
+      font-size: clamp(1.2rem, 4.6vw, 1.5rem);
+      margin-top: 22px;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(62,230,193,.12);
+      border: 1px solid rgba(62,230,193,.45);
+      color: #eafff9;
+      box-shadow: 0 0 30px rgba(62,230,193,.18);
+      animation: apareix .6s cubic-bezier(.2,.9,.25,1.2) both;
+    }
+    @keyframes apareix { from { opacity: 0; transform: scale(.85) translateY(10px); } }
+
+    .correu {
+      display: none;
+      margin-top: 10px;
+      font-size: .9rem;
+      color: var(--text-suau);
+      word-break: break-all;
+    }
+
+    /* ---------- Botons ---------- */
+    .accio { margin-top: 28px; min-height: 44px; }
+
+    .g_id_signin {
+      width: fit-content;
+      margin-inline: auto;
+      border-radius: 999px;
+      filter: drop-shadow(0 8px 24px rgba(123,92,255,.5));
+      transition: transform .2s;
+    }
+    .g_id_signin:hover { transform: translateY(-3px) scale(1.03); }
+
+    #boto-sortir {
+      font-family: var(--cos);
+      font-weight: 600;
+      font-size: 1rem;
+      color: #fff;
+      padding: 14px 32px;
+      border: 0;
+      border-radius: 999px;
+      cursor: pointer;
+      background: linear-gradient(110deg, var(--corall), var(--violeta));
+      box-shadow: 0 12px 30px -8px rgba(255,94,138,.7), inset 0 1px 0 rgba(255,255,255,.4);
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+    #boto-sortir::after {
+      content: "";
+      position: absolute; top: 0; left: -60%;
+      width: 40%; height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+      transform: skewX(-20deg);
+      transition: left .6s;
+    }
+    #boto-sortir:hover { transform: translateY(-3px); box-shadow: 0 18px 36px -8px rgba(255,94,138,.85), inset 0 1px 0 rgba(255,255,255,.4); }
+    #boto-sortir:hover::after { left: 130%; }
+    #boto-sortir:active { transform: translateY(0) scale(.97); }
+    #boto-sortir:focus-visible, .g_id_signin:focus-within { outline: 3px solid var(--menta); outline-offset: 4px; }
+
+    /* ---------- Peu de targeta (tall de bitllet) ---------- */
+    .peu {
+      margin-top: 30px;
+      padding-top: 18px;
+      border-top: 2px dashed rgba(255,255,255,.22);
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+      color: var(--text-suau);
+      font-size: .82rem;
+    }
+    .peu .punt {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--menta);
+      box-shadow: 0 0 0 0 rgba(62,230,193,.7);
+      animation: pols 2s infinite;
+    }
+    .peu.connectat .punt { background: var(--or); }
+    @keyframes pols { 70% { box-shadow: 0 0 0 10px rgba(62,230,193,0); } 100% { box-shadow: 0 0 0 0 rgba(62,230,193,0); } }
+
+    /* mitges llunes del bitllet */
+    .tall {
+      position: absolute; top: calc(100% - 118px);
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--nit);
+      z-index: 2;
+      box-shadow: inset 0 0 14px rgba(0,0,0,.6);
+    }
+    .tall.e { left: -13px; }
+    .tall.d { right: -13px; }
+
+    /* ---------- Confeti ---------- */
+    .confeti {
+      position: fixed; top: -20px;
+      width: 10px; height: 16px;
+      z-index: 50;
+      pointer-events: none;
+      animation: cau linear forwards;
+    }
+    @keyframes cau {
+      to { transform: translate(var(--dx), 110vh) rotate(var(--gir)); opacity: .9; }
+    }
+
+    @media (max-width: 420px) {
+      .targeta { padding: 38px 22px 30px; border-radius: 26px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Pagina preparada per afegir l'Oauth2</h1>
 
-  <h2 id="missatge-benvinguda" style="display:none;">Missatge de benvinguda</h2>
-
-  <div id="g_id_onload"
-       data-client_id="476999617163-6krmqmgm0u7igb4c35tickqtkqf33pcn.apps.googleusercontent.com"
-       data-callback="onSignIn">
+  <div class="fons" aria-hidden="true">
+    <div class="aurora a"></div>
+    <div class="aurora b"></div>
+    <div class="aurora c"></div>
+    <div class="quadricula"></div>
+    <div class="estrelles" id="estrelles"></div>
   </div>
-  <div class="g_id_signin" data-type="standard"></div>
-  <button id="boto-sortir" style="display:none;" onclick="signOut()">Desconnectar</button>
+
+  <main class="escena">
+    <section class="targeta" id="targeta">
+      <span class="tall e" aria-hidden="true"></span>
+      <span class="tall d" aria-hidden="true"></span>
+
+      <div class="segell" aria-hidden="true">
+        <span class="anell"></span>
+        <span class="anell dos"></span>
+        <div class="nucli" id="nucli">
+          <svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <img class="avatar" id="avatar" alt="Foto de perfil">
+      </div>
+
+      <h1>Pagina preparada per afegir l'Oauth2</h1>
+      <p class="subtitol" id="subtitol">Inicia sessió amb el teu compte de Google per obtenir el teu passi d'accés.</p>
+
+      <h2 id="missatge-benvinguda" style="display:none;">Missatge de benvinguda</h2>
+      <p class="correu" id="correu"></p>
+
+      <div class="accio">
+        <div id="g_id_onload"
+             data-client_id="476999617163-6krmqmgm0u7igb4c35tickqtkqf33pcn.apps.googleusercontent.com"
+             data-callback="onSignIn">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+        <button id="boto-sortir" style="display:none;" onclick="signOut()">Desconnectar</button>
+      </div>
+
+      <div class="peu" id="peu">
+        <span class="punt"></span>
+        <span id="estat">Connexió segura amb OAuth 2.0</span>
+      </div>
+    </section>
+  </main>
 
   <script>
+    /* ---------- Lògica d'autenticació ---------- */
     function onSignIn(response) {
       var id_token = response.credential;
       console.log("ID Token: " + id_token);
@@ -35,13 +394,98 @@
 
       document.getElementById('boto-sortir').style.display = 'block';
       document.querySelector('.g_id_signin').style.display = 'none';
+
+      /* Floritures visuals */
+      mostraPerfil(dades);
+      llancaConfeti();
     }
 
     function signOut() {
       document.getElementById('missatge-benvinguda').style.display = 'none';
       document.getElementById('boto-sortir').style.display = 'none';
       document.querySelector('.g_id_signin').style.display = 'block';
+
+      amagaPerfil();
     }
+
+    /* ---------- Floritures ---------- */
+    function mostraPerfil(dades) {
+      var avatar = document.getElementById('avatar');
+      if (dades.picture) {
+        avatar.src = dades.picture;
+        avatar.referrerPolicy = 'no-referrer';
+        avatar.style.display = 'block';
+        document.getElementById('nucli').style.display = 'none';
+      }
+      var correu = document.getElementById('correu');
+      correu.textContent = dades.email || '';
+      correu.style.display = dades.email ? 'block' : 'none';
+
+      document.getElementById('subtitol').textContent = 'Sessió iniciada correctament. Ja pots tancar-la quan vulguis.';
+      document.getElementById('estat').textContent = 'Sessió activa';
+      document.getElementById('peu').classList.add('connectat');
+    }
+
+    function amagaPerfil() {
+      document.getElementById('avatar').style.display = 'none';
+      document.getElementById('nucli').style.display = 'grid';
+      document.getElementById('correu').style.display = 'none';
+      document.getElementById('subtitol').textContent = 'Inicia sessió amb el teu compte de Google per obtenir el teu passi d\'accés.';
+      document.getElementById('estat').textContent = 'Connexió segura amb OAuth 2.0';
+      document.getElementById('peu').classList.remove('connectat');
+    }
+
+    function llancaConfeti() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var colors = ['#ff5e8a', '#ffd166', '#3ee6c1', '#7b5cff', '#ffffff'];
+      for (var i = 0; i < 70; i++) {
+        var c = document.createElement('span');
+        c.className = 'confeti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.background = colors[i % colors.length];
+        c.style.borderRadius = Math.random() > .5 ? '50%' : '2px';
+        c.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+        c.style.setProperty('--gir', (Math.random() * 900 - 450) + 'deg');
+        c.style.animationDuration = (2.2 + Math.random() * 2.2) + 's';
+        c.style.animationDelay = (Math.random() * .6) + 's';
+        document.body.appendChild(c);
+        setTimeout(function (el) { el.remove(); }, 6000, c);
+      }
+    }
+
+    /* Estrelles de fons */
+    (function () {
+      var cont = document.getElementById('estrelles');
+      for (var i = 0; i < 60; i++) {
+        var s = document.createElement('i');
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.animationDelay = (Math.random() * 4) + 's';
+        s.style.animationDuration = (3 + Math.random() * 4) + 's';
+        cont.appendChild(s);
+      }
+    })();
+
+    /* Inclinació 3D i reflex hologràfic */
+    (function () {
+      var t = document.getElementById('targeta');
+      document.addEventListener('pointermove', function (e) {
+        var r = t.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width;
+        var y = (e.clientY - r.top) / r.height;
+        var cx = Math.max(-1, Math.min(2, x));
+        var cy = Math.max(-1, Math.min(2, y));
+        t.style.setProperty('--mx', (x * 100) + '%');
+        t.style.setProperty('--my', (y * 100) + '%');
+        t.style.setProperty('--ry', ((cx - .5) * 14) + 'deg');
+        t.style.setProperty('--rx', ((.5 - cy) * 14) + 'deg');
+      });
+      document.addEventListener('pointerleave', function () {
+        t.style.setProperty('--rx', '0deg');
+        t.style.setProperty('--ry', '0deg');
+      });
+    })();
   </script>
 </body>
 </html>
+
