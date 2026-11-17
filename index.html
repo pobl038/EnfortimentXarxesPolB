@@ -12,13 +12,15 @@
 <body>
   <h1>Pagina preparada per afegir l'Oauth2</h1>
   <div id="g_id_onload"
-       data-client_id="EL_TEU_ID.apps.googleusercontent.com"
+       data-client_id="476999617163-6krmqmgm0u7igb4c35tickqtkqf33pcn.apps.googleusercontent.com"
        data-callback="onSignIn">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
   <button id="boto-sortir" style="display:none;" onclick="signOut()">Desconnectar</button>
   <script>
-    function onSignIn() {
+    function onSignIn(response) {
+      var id_token = response.credential;
+      console.log("ID Token: " + id_token);
       document.getElementById('boto-sortir').style.display = 'block';
       document.querySelector('.g_id_signin').style.display = 'none';
     }
