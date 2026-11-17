@@ -11,24 +11,37 @@
 </head>
 <body>
   <h1>Pagina preparada per afegir l'Oauth2</h1>
+
+  <h2 id="missatge-benvinguda" style="display:none;">Missatge de benvinguda</h2>
+
   <div id="g_id_onload"
        data-client_id="476999617163-6krmqmgm0u7igb4c35tickqtkqf33pcn.apps.googleusercontent.com"
        data-callback="onSignIn">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
   <button id="boto-sortir" style="display:none;" onclick="signOut()">Desconnectar</button>
+
   <script>
     function onSignIn(response) {
       var id_token = response.credential;
       console.log("ID Token: " + id_token);
+
+      const dades = JSON.parse(decodeURIComponent(escape(atob(
+        id_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))));
+
+      var missatge = document.getElementById('missatge-benvinguda');
+      missatge.textContent = 'Benvingut/da, ' + dades.name;
+      missatge.style.display = 'block';
+
       document.getElementById('boto-sortir').style.display = 'block';
       document.querySelector('.g_id_signin').style.display = 'none';
     }
 
     function signOut() {
+      document.getElementById('missatge-benvinguda').style.display = 'none';
       document.getElementById('boto-sortir').style.display = 'none';
       document.querySelector('.g_id_signin').style.display = 'block';
     }
- </script>
+  </script>
 </body>
 </html>
